@@ -8,7 +8,7 @@ import wheelchairHandler from "./commands/wheelchair";
 const client = new DiscordJS.Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
-
+/* 
 mongoose
   .connect(config.MONGODB_URI)
   .then(() => {
@@ -16,7 +16,7 @@ mongoose
   })
   .catch((error) => {
     console.log("error connection to MongoDB:", error.message);
-  });
+  }); */
 
 client.on("ready", (): void => {
   console.log("Bot ready");

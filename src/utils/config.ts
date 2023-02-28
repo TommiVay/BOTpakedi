@@ -10,5 +10,5 @@ const extractStringEnvVar = (key: keyof NodeJS.ProcessEnv): string => {
   return value;
 };
 
-export const MONGODB_URI: string = extractStringEnvVar("MONGODB_URI");
+//export const MONGODB_URI: string = extractStringEnvVar("MONGODB_URI");
 export const TOKEN: string = extractStringEnvVar("TOKEN");
