@@ -23,3 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 .env
+
+#SERVERLESS STUFF
+admin.env
+.env
+_meta
+.serverless
