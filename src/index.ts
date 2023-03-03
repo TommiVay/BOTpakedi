@@ -1,62 +1,53 @@
 const serverless = require("serverless-http");
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
+const nacl = require("tweetnacl");
 
-import DiscordJS, { Intents } from "discord.js";
+//import DiscordJS, { Intents } from "discord.js";
 //import mongoose from "mongoose";
 import * as config from "./utils/config";
-import * as constants from "./utils/constants";
-import isItFridayHandler from "./commands/isItFriday";
-import wheelchairHandler from "./commands/wheelchair";
-import { Response } from "express";
+import { Request, Response } from "express";
 
-const client = new DiscordJS.Client({
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
-});
-/* 
-mongoose
-  .connect(config.MONGODB_URI)
-  .then(() => {
-    console.log("connected to MongoDB");
-  })
-  .catch((error) => {
-    console.log("error connection to MongoDB:", error.message);
-  }); */
+app.use(bodyParser.json());
 
-/* client.on("ready", (): void => {
-  console.log("Bot ready");
-});
+app.post("/botpakedi", (req: Request, res: Response) => {
+  console.log("/botpakedi");
+  console.log(req);
+  // Checking signature (requirement 1.)
+  // Your public key can be found on your application in the Developer Portal
+  const signature = req.get("x-signature-ed25519");
+  const timestamp = req.get("x-signature-timestamp");
+  const body = req.body;
 
-client.on("messageCreate", (msg: DiscordJS.Message<boolean>): void => {
-  const command = msg.content.toLowerCase();
-  // is it friday
-  if (constants.IS_IT_FRIDAY_MATCHERS.includes(command)) {
-    isItFridayHandler(msg);
-    return;
+  if (!signature || !timestamp || !body) {
+    return res.status(400);
   }
 
-  // wheelchair
-  if (command.startsWith(constants.WHEELCHAIR_PREFIX)) {
-    console.log("!wheelchair");
-    wheelchairHandler(command);
+  const isVerified = nacl.sign.detached.verify(
+    Buffer.from(timestamp + JSON.stringify(body)),
+    Buffer.from(signature, "hex"),
+    Buffer.from(config.BOT_PUBLIC_KEY, "hex")
+  );
+
+  if (!isVerified) {
+    console.log("NOT VERIFIED");
+    return res.status(401).end("invalid request signature");
   }
-});
 
-client.login(config.TOKEN); */
+  // Replying to ping
+  if (body.type == 1) {
+    console.log("REPlY PING");
+    return res.status(200).json({ type: 1 });
+  }
 
-app.get("/", (req: Request, res: Response) => {
-  return res.status(200).json({
-    message: "Hello from root!",
-  });
-});
-
-app.get("/path", (req: Request, res: Response) => {
-  return res.status(200).json({
-    message: "Hello from path!",
+  return res.status(404).json({
+    error: "Not Found",
   });
 });
 
 app.use((req: Request, res: Response) => {
+  console.log("NOT FOUND");
   return res.status(404).json({
     error: "Not Found",
   });

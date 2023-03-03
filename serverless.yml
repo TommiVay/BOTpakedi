@@ -14,13 +14,13 @@ provider:
   name: aws
   runtime: nodejs18.x
   region: ${env:REGION}
-  memorySize: 128 #optional, in MB, default is 1024
+  memorySize: 256 #optional, in MB, default is 1024
   # Timeout for functions (default: 6 seconds). 
   # Note: API Gateway has a maximum timeout of 30 seconds
   # How long does open API take?
   timeout: 6 
   environment:
-    TEST: ${env:TEST} 
+    BOT_PUBLIC_KEY: ${env:BOT_PUBLIC_KEY}
 
 functions:
   api:
