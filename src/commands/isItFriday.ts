@@ -1,14 +1,10 @@
-import DiscordJS from "discord.js";
-
-const isItFirdayHandler = (msg: DiscordJS.Message<boolean>): void => {
-  const date = new Date();
-  let reply = "No";
+const isItFirdayHandler = (): string => {
+  console.log("/isitfriday");
+  const date = new Date(); // Lazy, dependat on hosting country.
   if (date.getDay() === 5) {
-    reply = "Yes";
+    return "Yes";
   }
-  msg.reply({
-    content: reply,
-  });
+  return "No";
 };
 
 export default isItFirdayHandler;

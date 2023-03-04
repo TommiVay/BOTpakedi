@@ -1,5 +1,4 @@
-import DiscordJS from "discord.js";
-import mongoose from "mongoose";
+/* import mongoose from "mongoose";
 import * as constants from "../utils/constants";
 
 const addWinner = (entry: string): void => {
@@ -58,3 +57,4 @@ const wheelchairHandler = (command: string): void => {
 };
 
 export default wheelchairHandler;
+ */

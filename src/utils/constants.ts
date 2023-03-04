@@ -1,13 +1,4 @@
-export const IS_IT_FRIDAY_MATCHERS = [
-  "is it friday",
-  "is it friday?",
-  "isitfriday",
-  "isitfriday?",
-  "!isitfriday?",
-  "!is it friday?",
-  "!isitfriday",
-  "!is it friday",
-];
+export const IS_IT_FRIDAY = "isitfriday";
 
 // wheelchair commands
 export const WHEELCHAIR_PREFIX = "!wheelchair";
