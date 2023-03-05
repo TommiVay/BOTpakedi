@@ -1,7 +1,7 @@
 org: tommivayrynen
 app: bot_pakedi
 service: bot-pakedi-lambda
-frameworkVersion: '3'
+frameworkVersion: "3"
 
 useDotenv: true
 
@@ -9,16 +9,15 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-plugin-typescript
 
-
 provider:
   name: aws
   runtime: nodejs18.x
   region: ${env:REGION}
   memorySize: 256 #optional, in MB, default is 1024
-  # Timeout for functions (default: 6 seconds). 
+  # Timeout for functions (default: 6 seconds).
   # Note: API Gateway has a maximum timeout of 30 seconds
-  # How long does open API take?
-  timeout: 6 
+  # OpenAI API might take a while to answer
+  timeout: 20
   environment:
     BOT_PUBLIC_KEY: ${env:BOT_PUBLIC_KEY}
 
@@ -26,4 +25,4 @@ functions:
   api:
     handler: src/index.handler
     events:
-      - httpApi: '*'
+      - httpApi: "*"

@@ -4,14 +4,14 @@ import bodyParser from "body-parser";
 import nacl from "tweetnacl";
 import { Request, Response } from "express";
 import isItFirdayHandler from "./commands/isItFriday";
-
+import askAIHandler from "./commands/askAI";
 import * as config from "./utils/config";
 import * as constants from "./utils/constants";
 
 const app = express();
 app.use(bodyParser.json());
 
-app.post("/botpakedi", (req: Request, res: Response) => {
+app.post("/botpakedi", async (req: Request, res: Response) => {
   console.log("/botpakedi");
 
   // Checking signature
@@ -45,6 +45,17 @@ app.post("/botpakedi", (req: Request, res: Response) => {
     return res.status(200).json({
       type: 4,
       data: { content: isItFirdayHandler() },
+    });
+  }
+
+  // Handle /ask
+  if (body.data.name === constants.ASK) {
+    console.log(body.data);
+
+    const answer = await askAIHandler(body.data.options[0]?.value);
+    return res.status(200).json({
+      type: 4,
+      data: answer,
     });
   }
 
