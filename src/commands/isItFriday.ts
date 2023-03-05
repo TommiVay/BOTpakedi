@@ -1,3 +1,5 @@
+const IS_IT_FRIDAY_MATCHER = "isitfriday";
+
 const isItFirdayHandler = (): string => {
   console.log("/isitfriday");
   const date = new Date(); // Lazy, dependat on hosting country.
@@ -7,4 +9,4 @@ const isItFirdayHandler = (): string => {
   return "No";
 };
 
-export default isItFirdayHandler;
+export { IS_IT_FRIDAY_MATCHER, isItFirdayHandler };

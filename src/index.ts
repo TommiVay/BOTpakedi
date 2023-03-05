@@ -3,10 +3,9 @@ import express from "express";
 import bodyParser from "body-parser";
 import nacl from "tweetnacl";
 import { Request, Response } from "express";
-import isItFirdayHandler from "./commands/isItFriday";
-import askAIHandler from "./commands/askAI";
+import { IS_IT_FRIDAY_MATCHER, isItFirdayHandler } from "./commands/isItFriday";
+import { ASK_AI_MATCHER, askAIHandler } from "./commands/askAI";
 import * as config from "./utils/config";
-import * as constants from "./utils/constants";
 
 const app = express();
 app.use(bodyParser.json());
@@ -41,7 +40,7 @@ app.post("/botpakedi", async (req: Request, res: Response) => {
   }
 
   // Handle /isitfriday
-  if (body.data.name === constants.IS_IT_FRIDAY) {
+  if (body.data.name === IS_IT_FRIDAY_MATCHER) {
     return res.status(200).json({
       type: 4,
       data: { content: isItFirdayHandler() },
@@ -49,7 +48,7 @@ app.post("/botpakedi", async (req: Request, res: Response) => {
   }
 
   // Handle /ask
-  if (body.data.name === constants.ASK) {
+  if (body.data.name === ASK_AI_MATCHER) {
     const answer = await askAIHandler(body.data.options[0]?.value);
     return res.status(200).json({
       type: 4,

@@ -1,5 +1,7 @@
 const { Configuration, OpenAIApi } = require("openai");
 
+const ASK_AI_MATCHER = "ask";
+
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -51,4 +53,4 @@ const formatAnswer = (question: string, answer: string): Object => {
   };
 };
 
-export default askAIHandler;
+export { ASK_AI_MATCHER, askAIHandler };
