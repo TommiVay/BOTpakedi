@@ -4,9 +4,9 @@ const isItFirdayHandler = (): string => {
   console.log("/isitfriday");
   const date = new Date(); // Lazy, dependat on hosting country.
   if (date.getDay() === 5) {
-    return "Yes";
+    return "I are think that";
   }
-  return "No";
+  return "I aren't think that";
 };
 
 export { IS_IT_FRIDAY_MATCHER, isItFirdayHandler };
