@@ -29,6 +29,8 @@ const askAIHandler = async (question: string): Promise<Object> => {
 };
 
 const formatAnswer = (question: string, answer: string): Object => {
+  console.log("Q: " + question);
+  console.log("A: " + answer);
   return {
     content: "",
     tts: false,

@@ -50,8 +50,6 @@ app.post("/botpakedi", async (req: Request, res: Response) => {
 
   // Handle /ask
   if (body.data.name === constants.ASK) {
-    console.log(body.data);
-
     const answer = await askAIHandler(body.data.options[0]?.value);
     return res.status(200).json({
       type: 4,
