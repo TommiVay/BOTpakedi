@@ -1,37 +1,48 @@
-import serverless from "serverless-http";
-import express from "express";
-import bodyParser from "body-parser";
-import nacl from "tweetnacl";
-import { Request, Response } from "express";
 import { IS_IT_FRIDAY_MATCHER, isItFirdayHandler } from "./commands/isItFriday";
 import { ASK_AI_MATCHER, askAIHandler } from "./commands/askAI";
+import { SOURCE_CODE_MATCHER, sourceCodeHandler } from "./commands/sourceCode";
 import * as config from "./utils/config";
+import axios from "axios";
+
+const baseURI = `https://discord.com/api/v10/webhooks/${process.env.APP_ID}`;
+const headers = {
+  Authorization: `Bot ${config.BOT_TOKEN}`,
+  "Content-Type": "application/json",
+};
+
+const sendAnswer = async (answer: Object, interactionToken: string) => {
+  try {
+    await axios.patch(
+      `${baseURI}/${interactionToken}/messages/@original`,
+      answer,
+      {
+        headers: headers,
+      }
+    );
+  } catch (error) {
+    console.log("SEND ASWER ERROR");
+    console.log(error);
+  }
+};
 
 exports.handler = async (event: any) => {
-  console.log(JSON.stringify(event));
-  /* 
-  // Handle /isitfriday
-  if (body.data.name === IS_IT_FRIDAY_MATCHER) {
-    return res.status(200).json({
-      type: 4,
-      data: { content: isItFirdayHandler() },
-    });
+  const eventMessage = JSON.parse(event.Records[0].Sns.Message);
+  const interactionToken = eventMessage.token;
+  let answer: Object;
+
+  switch (eventMessage.data.name) {
+    case IS_IT_FRIDAY_MATCHER:
+      answer = isItFirdayHandler();
+      break;
+    case ASK_AI_MATCHER:
+      answer = await askAIHandler(eventMessage.data.options[0]?.value);
+      break;
+    case SOURCE_CODE_MATCHER:
+      answer = sourceCodeHandler();
+      break;
+    default:
+      answer = { content: "Command not found" };
   }
 
-  // Handle /ask
-  if (body.data.name === ASK_AI_MATCHER) {
-    console.log(body);
-    res.status(200).json({
-      type: 4,
-      data: { content: "Processing..." },
-    });
-    await askAIHandler(body.data.options[0]?.value, body.token);
-    console.log("AFTER ASK AI HANDLER")
-    return;
-  }
-
-  console.log("CMD NOT FOUND");
-  return res.status(404).json({
-    error: "Not Found",
-  }); */
+  await sendAnswer(answer, interactionToken);
 };

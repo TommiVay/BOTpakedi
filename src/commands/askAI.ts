@@ -1,24 +1,27 @@
 const { Configuration, OpenAIApi } = require("openai");
+import * as config from "../utils/config";
 
 const ASK_AI_MATCHER = "ask";
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: config.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
 const model = "gpt-3.5-turbo";
-const ERROR = "something went wrong";
 
-const askAIHandler = async (question: string): Promise<Object> => {
-  console.log("/ask");
-  if (!question) return ERROR;
+const askAIHandler = async (question: string): Promise<string> => {
+  if (!question) return "No question received";
   try {
     const completion = await openai.createChatCompletion({
       model: model,
       messages: [{ role: "user", content: question }],
     });
-    return formatAnswer(question, completion.data.choices[0].message.content);
+    const formattedAnswer = formatAnswer(
+      question,
+      completion.data.choices[0].message.content
+    );
+    return JSON.stringify(formattedAnswer);
   } catch (error: any) {
     if (error.response) {
       console.log(error.response.status);
@@ -26,8 +29,8 @@ const askAIHandler = async (question: string): Promise<Object> => {
     } else {
       console.log(error.message);
     }
-    return ERROR;
   }
+  return "Something went wrong...";
 };
 
 const formatAnswer = (question: string, answer: string): Object => {
