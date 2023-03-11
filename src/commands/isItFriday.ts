@@ -1,10 +1,12 @@
-const isItFirdayHandler = (): string => {
+const IS_IT_FRIDAY_MATCHER = "isitfriday";
+
+const isItFirdayHandler = (): Object => {
   console.log("/isitfriday");
-  const date = new Date(); // Lazy, dependat on hosting country.
+  const date = new Date(); // Lazy, dependat on the hosting country.
   if (date.getDay() === 5) {
-    return "Yes";
+    return { content: "I are think that" };
   }
-  return "No";
+  return { content: "I aren't think that" };
 };
 
-export default isItFirdayHandler;
+export { IS_IT_FRIDAY_MATCHER, isItFirdayHandler };

@@ -8,6 +8,7 @@ useDotenv: true
 plugins:
   - serverless-dotenv-plugin
   - serverless-plugin-typescript
+  - serverless-iam-roles-per-function
 
 provider:
   name: aws
@@ -22,7 +23,16 @@ provider:
     BOT_PUBLIC_KEY: ${env:BOT_PUBLIC_KEY}
 
 functions:
-  api:
-    handler: src/index.handler
+  proxy:
+    handler: src/proxy.handler
     events:
       - httpApi: "*"
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - sns:Publish
+        Resource: "*"
+  handler:
+    handler: src/botPakedi.handler
+    events:
+      - sns: ${env:SNS_EVENT_TOPIC}
