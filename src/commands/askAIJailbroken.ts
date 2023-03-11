@@ -1,7 +1,7 @@
 const { Configuration, OpenAIApi } = require("openai");
 import * as config from "../utils/config";
 
-const ASK_AI_MATCHER = "ask-gpt";
+const ASK_AI_JAILBROKEN_MATCHER = "ask-botpakedi";
 
 const configuration = new Configuration({
   apiKey: config.OPENAI_API_KEY,
@@ -10,12 +10,17 @@ const openai = new OpenAIApi(configuration);
 const model = "gpt-3.5-turbo";
 const error = JSON.stringify({ content: "Something went wrong..." });
 
-const askAIHandler = async (question: string): Promise<string> => {
+const askAIJailbrokenHandler = async (question: string): Promise<string> => {
   if (!question) return error;
   try {
     const completion = await openai.createChatCompletion({
       model: model,
-      messages: [{ role: "user", content: question }],
+      messages: [
+        {
+          role: "user",
+          content: `${config.JAILBREAK_PROMPT} ${question}`,
+        },
+      ],
     });
     const formattedAnswer = formatAnswer(
       question,
@@ -56,4 +61,4 @@ const formatAnswer = (question: string, answer: string): Object => {
   };
 };
 
-export { ASK_AI_MATCHER, askAIHandler };
+export { ASK_AI_JAILBROKEN_MATCHER, askAIJailbrokenHandler };

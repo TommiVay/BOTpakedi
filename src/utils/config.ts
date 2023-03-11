@@ -16,3 +16,4 @@ export const APP_ID: string = extractStringEnvVar("APP_ID");
 export const BOT_TOKEN: string = extractStringEnvVar("BOT_TOKEN");
 export const REGION: string = extractStringEnvVar("REGION");
 export const SNS_EVENT_ARN: string = extractStringEnvVar("SNS_EVENT_ARN");
+export const JAILBREAK_PROMPT: string = extractStringEnvVar("JAILBREAK_PROMPT");

@@ -1,5 +1,9 @@
 import { IS_IT_FRIDAY_MATCHER, isItFirdayHandler } from "./commands/isItFriday";
 import { ASK_AI_MATCHER, askAIHandler } from "./commands/askAI";
+import {
+  ASK_AI_JAILBROKEN_MATCHER,
+  askAIJailbrokenHandler,
+} from "./commands/askAIJailbroken";
 import { SOURCE_CODE_MATCHER, sourceCodeHandler } from "./commands/sourceCode";
 import * as config from "./utils/config";
 import axios from "axios";
@@ -36,6 +40,11 @@ exports.handler = async (event: any) => {
       break;
     case ASK_AI_MATCHER:
       answer = await askAIHandler(eventMessage.data.options[0]?.value);
+      break;
+    case ASK_AI_JAILBROKEN_MATCHER:
+      answer = await askAIJailbrokenHandler(
+        eventMessage.data.options[0]?.value
+      );
       break;
     case SOURCE_CODE_MATCHER:
       answer = sourceCodeHandler();
