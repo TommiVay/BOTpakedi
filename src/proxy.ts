@@ -3,9 +3,10 @@ import express from "express";
 import bodyParser from "body-parser";
 import nacl from "tweetnacl";
 import { Request, Response } from "express";
-import { IS_IT_FRIDAY_MATCHER, isItFirdayHandler } from "./commands/isItFriday";
-import { ASK_AI_MATCHER, askAIHandler } from "./commands/askAI";
 import * as config from "./utils/config";
+const { SNSClient, PublishCommand } = require("@aws-sdk/client-sns");
+
+const snsClient = new SNSClient({ region: config.REGION });
 
 const app = express();
 app.use(bodyParser.json());
@@ -33,33 +34,30 @@ app.post("/botpakedi", async (req: Request, res: Response) => {
     return res.status(401).end("invalid request signature");
   }
 
-  // Replying to ping
+  // Replying to discord ping
   if (body.type === 1) {
     console.log("REPlY PING");
     return res.status(200).json({ type: 1 });
   }
 
-  // Handle /isitfriday
-  if (body.data.name === IS_IT_FRIDAY_MATCHER) {
-    return res.status(200).json({
+  const params = {
+    TopicArn: config.SNS_EVENT_ARN,
+    Message: JSON.stringify(body),
+  };
+
+  try {
+    await snsClient.send(new PublishCommand(params));
+    res.status(200).json({
       type: 4,
-      data: { content: isItFirdayHandler() },
+      data: { content: "Processing..." },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      type: 4,
+      data: { content: "Something went wrong..." },
     });
   }
-
-  // Handle /ask
-  if (body.data.name === ASK_AI_MATCHER) {
-    const answer = await askAIHandler(body.data.options[0]?.value);
-    return res.status(200).json({
-      type: 4,
-      data: answer,
-    });
-  }
-
-  console.log("CMD NOT FOUND");
-  return res.status(404).json({
-    error: "Not Found",
-  });
 });
 
 app.use((req: Request, res: Response) => {
