@@ -23,9 +23,10 @@ const sendAnswer = async (answer: Object, interactionToken: string) => {
         headers: headers,
       }
     );
-  } catch (error) {
-    console.log("SEND ASWER ERROR");
+  } catch (error: any) {
+    console.log("SEND ANSWER ERROR");
     console.log(error);
+    console.log(JSON.stringify(error.response?.data));
   }
 };
 

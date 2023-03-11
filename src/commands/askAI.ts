@@ -8,9 +8,9 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 const model = "gpt-3.5-turbo";
-const error = JSON.stringify({ content: "Something went wrong..." });
+const error = { content: "Something went wrong..." };
 
-const askAIHandler = async (question: string): Promise<string> => {
+const askAIHandler = async (question: string): Promise<Object> => {
   if (!question) return error;
   try {
     const completion = await openai.createChatCompletion({
@@ -21,7 +21,7 @@ const askAIHandler = async (question: string): Promise<string> => {
       question,
       completion.data.choices[0].message.content
     );
-    return JSON.stringify(formattedAnswer);
+    return formattedAnswer;
   } catch (error: any) {
     if (error.response) {
       console.log(error.response.status);
@@ -43,14 +43,9 @@ const formatAnswer = (question: string, answer: string): Object => {
       {
         type: "rich",
         title: question,
-        description: "",
+        description: "```" + answer + "```",
         color: 0x9f9f9f,
-        fields: [
-          {
-            name: "\u200B",
-            value: "```" + answer + "```",
-          },
-        ],
+        fields: [],
       },
     ],
   };
